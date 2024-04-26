@@ -17,23 +17,19 @@ library(tidyverse)
 
 ScreenTime <- read_excel("C:/Users/Daniel Kouassi/Desktop/Spring 2024/DATA 211 -50 Data Science/Data/ScreenTime.xlsx")
 
-# Convert Worked variable to factor
-ScreenTime$Worked <- factor(ScreenTime$Worked, levels = c("No", "Yes"))
+ScreenTime$Worked_numeric <- ifelse(ScreenTime$Worked == "Yes", 1, 0)
 
-# Perform one-sample t-test
-t.test(ScreenTime$Daily_Screen_TimeInHours_Usage ~ ScreenTime$Worked, alternative = "less")
+workdays <- subset(ScreenTime, Worked == "Yes")
+non_workdays <- subset(ScreenTime, Worked == "No")
 
 
-boxplot <- ggplot(ScreenTime, aes(x = Worked, y = ScreenTime$Daily_Screen_TimeInHours_Usage, fill = Worked)) +
-  geom_boxplot() +
-  labs(title = "Boxplot of Daily Screen Time Usage",
-       x = "Worked (Yes/No)",
-       y = "Daily Screen Time Usage (hours)") +
-  scale_fill_manual(values = c("blue", "green")) +
-  theme_minimal()
+# Perform the independent samples t-test
+t.test(workdays$Daily_Screen_TimeInHours_Usage, non_workdays$Daily_Screen_TimeInHours_Usage, alternative = "less")
 
-# Print the boxplot
-print(boxplot)
+
+
+
+
 
 ```
 
